@@ -378,38 +378,40 @@ function HTTPRequest(th, url, op1, op2) {
 }
 
 function updateFiles(pa) {
-    let dir = SDDir + "Download/.宾语/",
-        _dir = SDDir + "Download/.宾语/batchTriggerGenerationTool-main/",
-        uri = SDDir + "Download/.宾语/batchTriggerGenerationTool-main.zip",
-        th1 = threads.disposable();
-    HTTPRequest(th1, GitHubUrl, "b");
-    c = th1.blockedGet();
-    if (!c) return;
-    files.createWithDirs(uri);
-    files.writeBytes(uri, c);
-    try {
-        zips.X(uri, dir);
-    } catch (err) {
-        log(err);
-        toast(err)
-    }
-    let netVA = JSON.parse(files.read(_dir + "res/version.json")).va;
-    verArray.forEach((num, index) => {
-        if (num < netVA[index]) {
-            files.listDir(_dir, (name) => {
-                if (name == "License") return false;
-                if (files.isDir(_dir + name)) {
-                    files.listDir(_dir + name).forEach((_name) => {
-                        files.write("./" + name + "/" + _name, files.read(_dir + name + "/" + _name));
-                    })
-                } else {
-                    files.write("./" + name, files.read(_dir + name));
-                }
-                return false;
-            });
-            toast("热更新成功，请重启应用");
-            exit();
+    threads.start(function() {
+        let dir = "./update/",
+            _dir = "./update/batchTriggerGenerationTool-main/",
+            uri = "./update/batchTriggerGenerationTool-main.zip",
+            th1 = threads.disposable();
+        HTTPRequest(th1, GitHubUrl, "b");
+        c = th1.blockedGet();
+        if (!c) return;
+        files.createWithDirs(uri);
+        files.writeBytes(uri, c);
+        try {
+            $zip.unzip(uri, dir);
+        } catch (err) {
+            log(err);
+            toast(err)
         }
+        let netVA = JSON.parse(files.read(_dir + "res/version.json")).va;
+        verArray.forEach((num, index) => {
+            if (num < netVA[index]) {
+                files.listDir(_dir, (name) => {
+                    if (name == "License") return false;
+                    if (files.isDir(_dir + name)) {
+                        files.listDir(_dir + name).forEach((_name) => {
+                            files.write("./" + name + "/" + _name, files.read(_dir + name + "/" + _name));
+                        })
+                    } else {
+                        files.write("./" + name, files.read(_dir + name));
+                    }
+                    return false;
+                });
+                toast("热更新成功，请重启应用");
+                exit();
+            }
+        });
+        pa ? toast("已经是最新版本了~") : {};
     });
-    pa ? toast("已经是最新版本了~") : {};
 }

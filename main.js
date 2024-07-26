@@ -31,7 +31,6 @@ editPropView = (
 // 元数据
 const GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGenerationTool/zip/refs/heads/main", //GitHub项目压缩包url
     SDDir = files.getSdcardPath() + "/",
-    versionDir = "./res/version.json", //版本信息路径
     verArray = JSON.parse(files.read("./res/version.json")).va, // 版本序号数组
     attArray = ["name", "type", "id", "x", "y", "width", "height"], // 数组：[必要的7个属性名称]
     attObj = { // 对象：{必要的7个属性名称, ""}
@@ -379,27 +378,33 @@ function HTTPRequest(th, url, op1, op2) {
 }
 
 function updateFiles(pa) {
-    let c;
-    let th1 = threads.disposable();
-    let dir = files.path("./");
-    let _dir = files.path("./batchTriggerGenerationTool-main/");
-    let uri = files.path("./batchTriggerGenerationTool-main.zip");
-    files.createWithDirs(uri);
-    c = HTTPRequest(th1, GitHubUrl, "b");
+    let dir = files.path("./"),
+        _dir = files.path("./batchTriggerGenerationTool-main/"),
+        uri = files.path("./batchTriggerGenerationTool-main.zip"),
+        th1 = threads.disposable();
+    HTTPRequest(th1, GitHubUrl, "b");
     c = th1.blockedGet();
     if (!c) return;
+    files.createWithDirs(uri);
     files.writeBytes(uri, c);
     zips.X(uri, dir);
-    files.listDir(_dir, (name) => {
-        if (name == "License") return false;
-        if (files.isDir(_dir + name)) {
-            files.listDir(_dir + name).forEach((_name) => {
-                files.write(dir + name + "/" + _name, files.read(_dir + name + "/" + _name));
-            })
-        } else {
-            files.write(dir + name, files.read(_dir + name));
+    let netVA = = JSON.parse(files.read(_dir + "version.json")).va;
+    verArray.forEach((num, index) => {
+        if (num < netVA[index]) {
+            files.listDir(_dir, (name) => {
+                if (name == "License") return false;
+                if (files.isDir(_dir + name)) {
+                    files.listDir(_dir + name).forEach((_name) => {
+                        files.write(dir + name + "/" + _name, files.read(_dir + name + "/" + _name));
+                    })
+                } else {
+                    files.write(dir + name, files.read(_dir + name));
+                }
+                return false;
+            });
+            toast("热更新成功，请重启应用");
+            exit();
         }
-        return false;
     });
-    if (pa) toast("更新成功");
+    pa ? toast("已经是最新版本了~") : {};
 }

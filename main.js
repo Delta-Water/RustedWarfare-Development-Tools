@@ -378,16 +378,21 @@ function HTTPRequest(th, url, op1, op2) {
 }
 
 function updateFiles(pa) {
-    let dir = files.path("./"),
-        _dir = files.path("./batchTriggerGenerationTool-main/"),
-        uri = files.path("./batchTriggerGenerationTool-main.zip"),
+    let dir = SDDir + "Download/.宾语/",
+        _dir = SDDir + "Download/.宾语/batchTriggerGenerationTool-main/",
+        uri = SDDir + "Download/.宾语/batchTriggerGenerationTool-main.zip",
         th1 = threads.disposable();
     HTTPRequest(th1, GitHubUrl, "b");
     c = th1.blockedGet();
     if (!c) return;
     files.createWithDirs(uri);
     files.writeBytes(uri, c);
-    zips.X(uri, dir);
+    try {
+        zips.X(uri, dir);
+    } catch (err) {
+        log(err);
+        toast(err)
+    }
     let netVA = JSON.parse(files.read(_dir + "res/version.json")).va;
     verArray.forEach((num, index) => {
         if (num < netVA[index]) {
@@ -395,10 +400,10 @@ function updateFiles(pa) {
                 if (name == "License") return false;
                 if (files.isDir(_dir + name)) {
                     files.listDir(_dir + name).forEach((_name) => {
-                        files.write(dir + name + "/" + _name, files.read(_dir + name + "/" + _name));
+                        files.write("./" + name + "/" + _name, files.read(_dir + name + "/" + _name));
                     })
                 } else {
-                    files.write(dir + name, files.read(_dir + name));
+                    files.write("./" + name, files.read(_dir + name));
                 }
                 return false;
             });

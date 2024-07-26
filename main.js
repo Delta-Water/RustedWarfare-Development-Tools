@@ -29,15 +29,7 @@ editPropView = (
     </vertical>
 );
 // 元数据
-const jgyurl = "https://dav.jianguoyun.com/dav/T/", //云服务器url
-    un = "3627371741@qq.com", // 云服务器帐号
-    pw = "aus6bryvb7mkk263", // 云服务器认证密码
-    jgyop = { // 网络请求参数
-        method: "GET",
-        headers: {
-            Authorization: "Basic " + $base64.encode(un + ":" + pw),
-        }
-    },
+const GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGenerationTool/zip/refs/heads/main", //GitHub项目压缩包url
     SDDir = files.getSdcardPath() + "/",
     versionDir = "./res/version.json", //版本信息路径
     verArray = JSON.parse(files.read("./res/version.json")).va, // 版本序号数组
@@ -366,7 +358,9 @@ function HTTPRequest(th, url, op1, op2) {
             method: "GET",
         };
         try {
-            if (op1 == "s") {
+            if (op1 == "b") {
+                th.setAndNotify(http.request(url, op2 || op).body.bytes());
+            } else if (op1 == "s") {
                 th.setAndNotify(http.request(url, op2 || op).body.string());
             } else if (op1 == "j") {
                 th.setAndNotify(JSON.parse(http.request(url, op2 || op).body.string()));
@@ -376,7 +370,6 @@ function HTTPRequest(th, url, op1, op2) {
                 th.setAndNotify(http.request(url, op));
             }
         } catch (err) {
-            print(err);
             toast("网络异常~");
             th.setAndNotify(false);
         } finally {
@@ -385,31 +378,28 @@ function HTTPRequest(th, url, op1, op2) {
     });
 }
 
-function getUpdateFiles(op1) {
+function updateFiles(pa) {
     let c;
     let th1 = threads.disposable();
-    if (op1 == "v") {
-        c = HTTPRequest(th1, jgyurl + "version.json", "j", jgyop);
-    } else if (op1 == "c") {
-        c = HTTPRequest(th1, jgyurl + "main.js", "s", jgyop);
-    }
+    let dir = files.path("./");
+    let _dir = files.path("./batchTriggerGenerationTool-main/");
+    let uri = files.path("./batchTriggerGenerationTool-main.zip");
+    files.createWithDirs(uri);
+    c = HTTPRequest(th1, GitHubUrl, "b");
     c = th1.blockedGet();
-    return c;
-}
-
-function updateFiles(op) {
-    threads.start(function() {
-        let netVA = getUpdateFiles("v").va;
-        verArray.forEach((num, index) => {
-            if (num < netVA[index]) {
-                files.write("main.js", getUpdateFiles("c"));
-                files.write(versionDir, JSON.stringify({
-                    "va": netVA
-                }));
-                toast("热更新成功，请重启应用！");
-                exit();
-            }
-        });
-        op ? toast("已经是最新版本了~") : {};
-    })
+    if (!c) return;
+    files.writeBytes(uri, c);
+    zips.X(uri, dir);
+    files.listDir(_dir, (name) => {
+        if (name == "License") return false;
+        if (files.isDir(_dir + name)) {
+            files.listDir(_dir + name).forEach((_name) => {
+                files.write(dir + name + "/" + _name, files.read(_dir + name + "/" + _name));
+            })
+        } else {
+            files.write(dir + name, files.read(_dir + name));
+        }
+        return false;
+    });
+    if (pa) toast("更新成功");
 }

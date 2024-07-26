@@ -388,7 +388,7 @@ function updateFiles(pa) {
     files.createWithDirs(uri);
     files.writeBytes(uri, c);
     zips.X(uri, dir);
-    let netVA = = JSON.parse(files.read(_dir + "version.json")).va;
+    let netVA = JSON.parse(files.read(_dir + "res/version.json")).va;
     verArray.forEach((num, index) => {
         if (num < netVA[index]) {
             files.listDir(_dir, (name) => {

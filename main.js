@@ -1,8 +1,8 @@
 "ui";
-
+/*
 threads.start(function() {
     console.show();
-});
+});*/
 
 /* 初始化部分 */
 

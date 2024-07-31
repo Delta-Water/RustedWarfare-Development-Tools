@@ -20,7 +20,8 @@ const GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGeneratio
         "width": "",
         "height": ""
     },
-    { // 函数模块loadFile,
+    { // 函数模块
+        loadFile,
         inputObj,
         inputOpt,
         writeIn,

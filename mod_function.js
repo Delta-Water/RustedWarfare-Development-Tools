@@ -127,18 +127,35 @@ function buildDialogs() {
     this.sAD = function() {
         dialogs.build({
                 title: "关于",
-                content: '作者：print("")\n热更新已开启\n版本代码：' + verArray,
-                positive: "查看教程",
+                content: '作者：print("")\n热更新已开启\n版本号：' + verArray[0] + '.' + verArray[1] + '.' + verArray[2] + '.' + verArray[3]+"\n"+"通过推广本工具支持我们",
+                positive: "推广",
                 neutral: "检测更新"
             })
             .on("positive", () => {
-                app.openUrl("https://zhuanlan.zhihu.com/p/710487172?utm_psn=1799135800694292480");
+                setClip("https://wwp.lanzoup.com/iF14E25ateub");
+                toast("已复制工具的下载链接");
             })
             .on("neutral", () => {
                 updateFiles(true);
             })
             .show();
     };
+    // showTutorialDialog
+    this.sTD = function() {
+        dialogs.build({
+                title: "教程",
+                content: "你难道不准备先学会\n如何让它听话它吗~",
+                positive: "新手教程",
+                neutral: "进阶教程"
+            })
+            .on("positive", () => {
+                app.openUrl("https://zhuanlan.zhihu.com/p/710487172?utm_psn=1799135800694292480");
+            })
+            .on("neutral", () => {
+                toast(uDT);
+            })
+            .show();
+    }
 }
 
 // 操作字符串类

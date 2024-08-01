@@ -144,7 +144,7 @@ function buildDialogs() {
     this.sTD = function() {
         dialogs.build({
                 title: "教程",
-                content: "你难道不准备先学会\n如何让它听话它吗~",
+                content: "你难道不准备先学会…\n如何让它听话它吗~",
                 positive: "新手教程",
                 neutral: "进阶教程"
             })

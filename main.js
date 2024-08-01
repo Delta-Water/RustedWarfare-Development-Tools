@@ -7,7 +7,8 @@ threads.start(function() {
 /* 初始化部分 */
 
 // 元数据
-const GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGenerationTool/zip/refs/heads/main", //GitHub项目压缩包url
+const uDT = "功能开发中，敬请期待！",
+    GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGenerationTool/zip/refs/heads/main", //GitHub项目压缩包url
     SDDir = files.getSdcardPath() + "/",
     verArray = JSON.parse(files.read("./res/version.json")).va, // 版本序号数组
     attArray = ["name", "type", "id", "x", "y", "width", "height"], // 数组：[必要的7个属性名称]
@@ -47,7 +48,7 @@ main = ( // 定义视图XML
         <horizontal gravity="center">
             <button id="button3" text="导入"/>
             <button id="button1" text="开始"/>
-            <button id="button2" text="工具"/>
+            <button id="button2" text="教程"/>
         </horizontal>
     </frame>
 );
@@ -61,7 +62,7 @@ editPropView = (
 ui.statusBarColor(主题色);
 ui.layout(main); // 显示视图
 ui.button1.on("click", () => inputObj()); // 创建按钮监听器
-ui.button2.on("click", () => toast("开发中，敬请期待"));
+ui.button2.on("click", () => bD.sTD());
 ui.button3.on("click", () => loadFile());
 ui.emitter.on("create_options_menu", (menu) => { // 创建右上角控件监听器
     menu.add("设置");
@@ -70,7 +71,7 @@ ui.emitter.on("create_options_menu", (menu) => { // 创建右上角控件监听�
 ui.emitter.on("options_item_selected", (e, item) => {
     switch (item.getTitle()) {
         case "设置":
-            toast("还没有设置");
+            toast(uDT);
             break;
         case "关于":
             bD.sAD();

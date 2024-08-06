@@ -45,6 +45,13 @@ var 主题色 = "#123456",
 main = ( // 定义视图XML
     <frame bg="{{主题色}}">
         <toolbar id="toolbar" title="批量生成宾语" h="auto"/>
+        <vertical gravity="bottom|center" h="*">
+            <text gravity="center" text="更新说明" color="white"/>
+            <text gravity="center" text="可以使用i作为变量名称，不会与%{i}冲突" color="white"/>
+            <text gravity="center" text="表达式中请使用%{i}来引用i" color="white"/>
+            <text gravity="center" text="修复sin函数bug" color="white"/>
+            <text gravity="center" text="过度版本，UI较丑，见谅，在校没精力更新" color="white"/>
+        </vertical>
         <horizontal gravity="center">
             <button id="button3" text="导入"/>
             <button id="button1" text="开始"/>
@@ -62,7 +69,7 @@ editPropView = (
 ui.statusBarColor(主题色);
 ui.layout(main); // 显示视图
 ui.button1.on("click", () => inputObj()); // 创建按钮监听器
-ui.button2.on("click", () => bD.sTD());
+ui.button2.on("click", () => toast(uDT));
 ui.button3.on("click", () => loadFile());
 ui.emitter.on("create_options_menu", (menu) => { // 创建右上角控件监听器
     menu.add("设置");

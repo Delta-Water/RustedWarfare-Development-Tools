@@ -127,7 +127,7 @@ function buildDialogs() {
     this.sAD = function() {
         dialogs.build({
                 title: "关于",
-                content: '作者：print("")\n热更新已开启\n版本号：' + verArray[0] + '.' + verArray[1] + '.' + verArray[2] + '.' + verArray[3]+"\n"+"通过推广本工具支持我们",
+                content: '作者：print("")\n热更新已开启\n版本号：' + verArray[0] + '.' + verArray[1] + '.' + verArray[2] + '.' + verArray[3] + "\n" + "通过推广本工具支持我们",
                 positive: "推广",
                 neutral: "检测更新"
             })
@@ -214,9 +214,9 @@ function operateStrings() {
                 if (typeof value === 'string') {
                     newObject[key] = value.replace(/\$\{(\w+)\}/g, (match, p1) => {
                         if (paramExp[p1]) {
-                            let evaluatedValue = eval(paramExp[p1].replace("i", i.toString()));
+                            let evaluatedValue = eval(paramExp[p1].replace(/\%\{(\i+)\}/g, i.toString()));
                             return evaluatedValue !== undefined ? String(evaluatedValue) : match;
-                        }
+                        } 
                         return match;
                     });
                 } else if (Array.isArray(value)) {
@@ -299,8 +299,6 @@ function operateStrings() {
                 error = "循环次数必须定义";
             } else if (loop <= 0) {
                 error = "循环次数必须是大于0的整数";
-            } else if (input.split("\n").length - 1 > Object.keys(paramExp).length) {
-                error = "loop不应作为变量";
             }
             if (error) {
                 if (_mode == "d") {

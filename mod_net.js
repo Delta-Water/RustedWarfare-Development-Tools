@@ -45,7 +45,7 @@ function updateFiles(pa) {
         }
         let netVA = JSON.parse(files.read(_dir + "res/version.json")).va;
         verArray.forEach((num, index) => {
-            if (num < netVA[index]) {
+            if (num < netVA[index] || !files.exists("./ass")) {
                 files.listDir(_dir, (name) => {
                     if (name == "License") return false;
                     let path = _dir + name;

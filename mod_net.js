@@ -52,7 +52,7 @@ function updateFiles(pa) {
                     if (files.isDir(path)) {
                         writeDirsFiles(path);
                     } else {
-                        files.cerateWithDirs("./" + name);
+                        files.createWithDirs("./" + name);
                         files.write("./" + name, files.read(path));
                     }
                     return false;
@@ -71,7 +71,7 @@ function writeDirsFiles(pa) {
         if (files.isDir(path)) {
             writeDirsFiles(path);
         } else {
-            files.cerateWithDirs("./" + path.slice(41));
+            files.createWithDirs("./" + path.slice(41));
             files.write("./" + path.slice(41), files.read(path));
         }
         return false;

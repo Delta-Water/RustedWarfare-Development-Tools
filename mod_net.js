@@ -30,7 +30,8 @@ function updateFiles(pa) {
         let dir = "./update/",
             _dir = "./update/batchTriggerGenerationTool-main/",
             uri = "./update/batchTriggerGenerationTool-main.zip",
-            th1 = threads.disposable();
+            th1 = threads.disposable(),
+            boolNum = 0;
         HTTPRequest(th1, GitHubUrl, "b");
         c = th1.blockedGet();
         if (!c) return;
@@ -47,12 +48,11 @@ function updateFiles(pa) {
             if (num < netVA[index]) {
                 files.listDir(_dir, (name) => {
                     if (name == "License") return false;
-                    if (files.isDir(_dir + name)) {
-                        files.listDir(_dir + name).forEach((_name) => {
-                            files.write("./" + name + "/" + _name, files.read(_dir + name + "/" + _name));
-                        })
+                    let path = _dir + name;
+                    if (files.isDir(path)) {
+                        writeDirsFiles(path);
                     } else {
-                        files.write("./" + name, files.read(_dir + name));
+                        files.write("./" + name, files.read(path));
                     }
                     return false;
                 });
@@ -61,6 +61,18 @@ function updateFiles(pa) {
             }
         });
         pa ? toast("已经是最新版本了~") : {};
+    });
+}
+
+function writeDirsFiles(pa) {
+    files.listDir(pa, (name) => {
+        let path = files.join(pa, name);
+        if (files.isDir(path)) {
+            writeDirsFiles(path);
+        } else {
+            files.write("./" + path.slice(41), files.read(path));
+        }
+        return false;
     });
 }
 

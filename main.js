@@ -62,7 +62,7 @@ const uDT = "功能开发中，敬请期待！",
     { // 网络模块
         updateFiles
     } = require("mod_net.js");
-// updateFiles(); // 联网检测并更新
+updateFiles(); // 联网检测并更新
 // 普通全局变量
 var themeColor = { // 绿色系
     "a": "#DCEDC8",

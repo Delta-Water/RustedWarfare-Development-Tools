@@ -194,7 +194,7 @@ function buildDialogs() {
     }
     this.sC = function(callback) {
         dialogs.build({
-            title: "单选",
+            title: "请选择导入的文件格式",
             items: ["ini", "字符串"],
             itemsSelectMode: "single",
             itemsSelectedIndex: 0

@@ -142,7 +142,7 @@ function buildDialogs() {
     // showMultilineInputDialog
     this.sMID = function(title, text, callback, errCode) { // 自定义多行输入对话框
         global['editViewText'] = text;
-        global["inputView"] = ui.inflate(editView);
+        global["inputView"] = ui.inflate(editViewXML);
         errCode ? inputView.input.setError(errCode) : {};
         dialogs.build({
             customView: inputView,
@@ -604,17 +604,6 @@ function pareINIhr(file_path, g) {
     }
     g.setO_action(g.object_group[section]); //  我很讨厌这行代码
 }
-// function insert_XMLobjectGroup(str) {}
-
-/*
-function Text() {
-
-    var group_1 = new justObjectgroup();
-
-    pareINIhr("/storage/emulated/0/脚本/js_new_object.ini", group_1);
-    if (!oGroup_write_file("/storage/emulated/0/脚本/object_map.tmx", group_1)) console.log("读取失败");
-} Text(); // 此函数与上文无关
-*/
 
 //  冷知识 name可以作为触发器的id（properties节点），并且更可观。重点：RW源码实现为检查id是否为null，真则将name作为id（Java）
 //  RW源码会率先检查activateIds和whenActivatedIds，随后为alsoActivate和activatedBy，但更常用的是后者

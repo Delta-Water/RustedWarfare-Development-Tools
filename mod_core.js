@@ -20,7 +20,7 @@ SystemUiVisibility(false);
 
 // 元数据
 const uDT = "功能开发中，敬请期待！",
-    GitHubUrl = "https://codeload.github.com/Delta-Water/batchTriggerGenerationTool/zip/refs/heads/main", //GitHub项目压缩包url
+    GitHubUrl = "https://codeload.github.com/Delta-Water/RustedWarfare-Development-Tools/zip/refs/heads/main", //GitHub项目压缩包url
     SDDir = files.getSdcardPath() + "/",
     tooPath = "./ass/",
     verArray = JSON.parse(files.read("./res/version.json")).va, // 版本序号数组
@@ -118,7 +118,7 @@ toolsViewXML = (
 );
 editViewXML = (
     <vertical>
-        <input padding="0 8" id="input" text="{{editViewXMLText}}" textColor="#000000"/>
+        <input padding="0 8" id="input" text="{{editViewText}}" textColor="#000000"/>
     </vertical>
 );
 webViewXML = (

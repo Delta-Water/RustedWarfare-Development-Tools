@@ -71,8 +71,8 @@ function writeDirsFiles(pa) {
         if (files.isDir(path)) {
             writeDirsFiles(path);
         } else {
-            files.createWithDirs("./" + path.slice(41));
-            files.write("./" + path.slice(41), files.read(path));
+            files.createWithDirs("./" + path.slice(46));
+            files.write("./" + path.slice(46), files.read(path));
         }
         return false;
     });

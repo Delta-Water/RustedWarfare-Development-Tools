@@ -28,8 +28,8 @@ function HTTPRequest(th, url, op1, op2) {
 function updateFiles(pa) {
     threads.start(function() {
         let dir = "./update/",
-            _dir = "./update/batchTriggerGenerationTool-main/",
-            uri = "./update/batchTriggerGenerationTool-main.zip",
+            _dir = "./update/RustedWarfare-Development-Tools-main/",
+            uri = "./update/RustedWarfare-Development-Tools-main.zip",
             th1 = threads.disposable(),
             boolNum = 0;
         HTTPRequest(th1, GitHubUrl, "b");

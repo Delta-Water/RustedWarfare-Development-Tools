@@ -47,7 +47,7 @@ function updateFiles(pa) {
         verArray.forEach((num, index) => {
             if (num < netVA[index] || !files.exists("./ass")) {
                 files.listDir(_dir, (name) => {
-                    if (name == "License") return false;
+                    if (name == "License" || name == "README.md") return false;
                     let path = _dir + name;
                     if (files.isDir(path)) {
                         writeDirsFiles(path);

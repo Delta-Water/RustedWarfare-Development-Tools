@@ -62,7 +62,7 @@ function loadFile() {
                 }
             });
         } else if (index == 0) {
-            let group = new justObjectgroup();
+            var group = new justObjectgroup();
             bD.sMID("请输入配置文件的绝对路径", SDDir, (input) => {
                 if (input) {
                     pareINIhr(input, group);
@@ -98,17 +98,25 @@ function inputOpt(reInput, errCode) {
             return;
         };
         oS.gO(paramExp, loop);
-        writeIn(oS.gXS());
+        writeIn();
     }, errCode);
 }
 
 function writeIn(content, name, toastText) {
     if (!name) {
-        bD.sMID("请输入保存的文件名", "", (input) => {
-            var uri = files.join(files.join(SDDir, "Documents/Trigger/"), input);
-            files.createWithDirs(uri);
-            files.write(uri, content);
-            toast("保存成功，请前往对应文件查看");
+        bD.sPMID("请输入保存的文件名", "", (input, bool) => {
+            if (!bool) {
+                let content = oS.gXS();
+                let uri = files.join(files.join(SDDir, "Documents/Trigger/"), input);
+                files.createWithDirs(uri);
+                files.write(uri, content);
+                toast("保存成功，请前往对应文件查看");
+            } else {
+                if (!content) let content = oS.gXS(true);
+                let [xmlContent1, xmlContent2] = openMap(input);
+                files.write(input, xmlContent1 + content + xmlContent2);
+                toast("保存成功，请前往对应文件查看");
+            }
         });
     } else {
         var uri = files.join(files.join(SDDir, "Documents/Trigger/"), name);
@@ -116,6 +124,18 @@ function writeIn(content, name, toastText) {
         files.write(uri, content);
         toast(toastText);
     }
+}
+
+function openMap(uri) {
+    let file = open(uri, "r");
+    let content = file.read();
+    file.close();
+    let f = content.indexOf('<objectgroup name="Triggers">');
+    f = (f != -1) ? f : content.indexOf('<objectgroup name="triggers">');
+    // let t = f + content.slice(f).indexOf('</objectgroup>')
+    let xmlContent1 = content.slice(0, f + 29);
+    let xmlContent2 = content.slice(f + 29);
+    return [xmlContent1, xmlContent2]
 }
 
 function escapeXML(str) {
@@ -142,21 +162,45 @@ function buildDialogs() {
     // showMultilineInputDialog
     this.sMID = function(title, text, callback, errCode) { // 自定义多行输入对话框
         global['editViewText'] = text;
-        global["inputView"] = ui.inflate(editViewXML);
+        global["editView"] = ui.inflate(editViewXML);
         errCode ? inputView.input.setError(errCode) : {};
         dialogs.build({
-            customView: inputView,
+            customView: editView,
             title: title,
             positive: "确定",
             negative: "取消",
             cancelable: false
         }).on("positive", () => {
-            let input = inputView.input.text();
+            let input = editView.input.text();
             if (input == "") {
                 toast("未输入任何内容");
                 return;
             }
             callback(input);
+        }).on("negative", () => {}).show();
+    }
+    this.sPMID = function(title, text, callback, errCode) { // 自定义多行输入对话框
+        global['editViewText'] = text;
+        global["pathView"] = ui.inflate(pathViewXML);
+        let bool = true;
+        pathView.isMap.on("check", (bool) => {
+            if (bool) bool = true;
+            else bool = false;
+        });
+        errCode ? inputView.input.setError(errCode) : {};
+        dialogs.build({
+            customView: pathView,
+            title: title,
+            positive: "确定",
+            negative: "取消",
+            cancelable: false
+        }).on("positive", () => {
+            let input = pathView.input.text();
+            if (input == "") {
+                toast("未输入任何内容");
+                return;
+            }
+            callback(input, bool);
         }).on("negative", () => {}).show();
     }
     // showAboutDialog
@@ -287,25 +331,31 @@ function operateStrings() {
         }
     }
     // generateXMLString
-    this.gXS = function() {
-        let xmlOutput = '  <objectgroup name="Triggers">\n';
+    this.gXS = function(bool) {
+        if (!bool) {
+            var xmlOutput = '  <objectgroup name="Triggers">'
+        } else {
+            var xmlOutput = "";
+        }
         for (let i = 0; i < triArray.length; i++) {
             let obj = triArray[i];
-            xmlOutput += '    <object';
+            xmlOutput += '\n    <object';
             for (let key of attArray) {
                 xmlOutput += ` ${escapeXML(key)}="${escapeXML(obj[key])}"`;
             }
-            xmlOutput += '>\n';
             if (obj.prop && obj.prop.length > 0) {
-                xmlOutput += '      <properties>\n';
+                xmlOutput += '>';
+                xmlOutput += '\n      <properties>\n        ';
                 for (let prop of obj.prop) {
-                    xmlOutput += `        <property name="${escapeXML(prop.name)}" value="${escapeXML(prop.value)}" />\n`;
+                    xmlOutput += `<property name="${escapeXML(prop.name)}" value="${escapeXML(prop.value)}" />`;
                 }
-                xmlOutput += '      </properties>\n';
+                xmlOutput += '\n      </properties>\n    ';
+                xmlOutput += '</object>';
+            } else {
+                xmlOutput += " />";
             }
-            xmlOutput += '    </object>\n';
         }
-        xmlOutput += '  </objectgroup>';
+        if (!bool) xmlOutput += '\n  </objectgroup>';
         return xmlOutput;
     }
     // checkParameter
@@ -577,19 +627,19 @@ function object_copy(result, other) {
 
 function oGroup_write_file(path_char_t, group) //  写入文件 返回写入结果（false为失败）
 {
+    /*
     files.create(path_char_t);
     var file_data = files.read(path_char_t);
-    if (file_data === null) return false;
-    file_data = group.parse_toXML();
-    files.write(path_char_t, file_data);
+    if (file_data === null) return false;*/
+    file_data = group.parse_toXML();/*
+    files.write(path_char_t, file_data);*/
+    writeIn(file_data);
     return true;
 }
 
 function pareINIhr(file_path, g) {
-
     let lines_string = files.read(file_path).split('\n'); //  读取分隔文件内容为数组
     let section = "";
-    toast(lines_string);
 
     for (let line of lines_string) {
 

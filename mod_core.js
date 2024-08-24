@@ -116,17 +116,6 @@ toolsViewXML = (
         </list>
     </vertical>
 );
-editViewXML = (
-    <vertical>
-        <input padding="0 8" id="input" text="{{editViewText}}" textColor="#000000"/>
-    </vertical>
-);
-pathViewXML = (
-    <vertical>
-        <input padding="0 8" id="input" text="{{editViewText}}" textColor="#000000"/>
-        <checkbox id="isMap" checked="true" text="导入到地图"/>
-    </vertical>
-);
 webViewXML = (
     <webview id="webView" w="*" h="*" />
 );

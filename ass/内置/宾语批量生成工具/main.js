@@ -186,10 +186,10 @@ function buildDialogs() {
         pathView.isMap.on("check", (b) => {
             if (b) {
                 bool = true;
-                pathView.title.setText("请输入待导出的地图路径");
+                // pathView.title.setText("请输入待导出的地图路径");
             } else {
                 bool = false;
-                pathView.title.setText("请输入待导出的文件名称");
+                // pathView.title.setText("请输入待导出的文件名称");
             }
         });
         errCode ? inputView.input.setError(errCode) : {};

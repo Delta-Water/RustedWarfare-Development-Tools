@@ -9,6 +9,7 @@ batchTriggerGenerationToolView = ( // XML
 var triObj = {}, // 用于传递宾语键值对和变量
     triArray = {}, // 用于传递生成的宾语
     // 新建实例
+    group = new justObjectgroup(),
     oS = new operateStrings(),
     bD = new buildDialogs();
 
@@ -21,7 +22,15 @@ ui.button3.on("click", () => loadFile());
 // print("")
 function loadFile() {
     bD.sC((index) => {
-        if (index == 1) {
+        if (index == 0) {
+            bD.sMID("请输入配置文件的绝对路径", SDDir, (input) => {
+                if (input) {
+                    pareINIhr(input, group);
+                    // let content = oGroup_return_file(group);
+                    writeIn(0);
+                }
+            })
+        } else if (index == 1) {
             bD.sMID("请输入配置文件的绝对路径", SDDir, (input) => {
                 if (input) {
                     try { // 尝试读取文件
@@ -57,23 +66,10 @@ function loadFile() {
                         }
                     });
                     if (!err) {
-                        writeIn(oS.gXS());
+                        writeIn(1);
                     }
                 }
             });
-        } else if (index == 0) {
-            var group = new justObjectgroup();
-            bD.sMID("请输入配置文件的绝对路径", SDDir, (input) => {
-                if (input) {
-                    pareINIhr(input, group);
-                    bD.sMID("请输入保存的文件名", "", (input) => {
-                        if (input) {
-                            let uri = files.join(files.join(SDDir, "Documents/Trigger/"), input);
-                            oGroup_write_file(uri, group);
-                        }
-                    })
-                }
-            })
         }
     })
 }
@@ -102,24 +98,28 @@ function inputOpt(reInput, errCode) {
     }, errCode);
 }
 
-function writeIn(content, name, toastText) {
-    if (!name) {
-        bD.sPMID("请输入保存的文件名", "", (input, bool) => {
+function writeIn(mode, content, name, toastText) {
+    if (mode != -1) {
+        bD.sPMID("请输入待导入的地图路径", "", (input, bool) => {
+            if (mode == 0) { // ini
+                var content = oGroup_return_file(group);
+            } else if (mode == 1) { // txt
+                var content = oS.gXS(bool);
+            }
+            log(bool);
             if (!bool) {
-                let content = oS.gXS();
                 let uri = files.join(files.join(SDDir, "Documents/Trigger/"), input);
                 files.createWithDirs(uri);
                 files.write(uri, content);
                 toast("保存成功，请前往对应文件查看");
             } else {
-                if (!content) let content = oS.gXS(true);
                 let [xmlContent1, xmlContent2] = openMap(input);
                 files.write(input, xmlContent1 + content + xmlContent2);
                 toast("保存成功，请前往对应文件查看");
             }
         });
     } else {
-        var uri = files.join(files.join(SDDir, "Documents/Trigger/"), name);
+        let uri = files.join(files.join(SDDir, "Documents/Trigger/"), name);
         files.createWithDirs(uri);
         files.write(uri, content);
         toast(toastText);
@@ -180,12 +180,17 @@ function buildDialogs() {
         }).on("negative", () => {}).show();
     }
     this.sPMID = function(title, text, callback, errCode) { // 自定义多行输入对话框
-        global['editViewText'] = text;
+        global['pathViewText'] = text;
         global["pathView"] = ui.inflate(pathViewXML);
-        let bool = true;
-        pathView.isMap.on("check", (bool) => {
-            if (bool) bool = true;
-            else bool = false;
+        var bool = true;
+        pathView.isMap.on("check", (b) => {
+            if (b) {
+                bool = true;
+                pathView.title.setText("请输入待导出的地图路径");
+            } else {
+                bool = false;
+                pathView.title.setText("请输入待导出的文件名称");
+            }
         });
         errCode ? inputView.input.setError(errCode) : {};
         dialogs.build({
@@ -200,6 +205,7 @@ function buildDialogs() {
                 toast("未输入任何内容");
                 return;
             }
+            log("a", bool);
             callback(input, bool);
         }).on("negative", () => {}).show();
     }
@@ -345,9 +351,9 @@ function operateStrings() {
             }
             if (obj.prop && obj.prop.length > 0) {
                 xmlOutput += '>';
-                xmlOutput += '\n      <properties>\n        ';
+                xmlOutput += '\n      <properties>';
                 for (let prop of obj.prop) {
-                    xmlOutput += `<property name="${escapeXML(prop.name)}" value="${escapeXML(prop.value)}" />`;
+                    xmlOutput += `\n        <property name="${escapeXML(prop.name)}" value="${escapeXML(prop.value)}" />`;
                 }
                 xmlOutput += '\n      </properties>\n    ';
                 xmlOutput += '</object>';
@@ -382,7 +388,7 @@ function operateStrings() {
                 if (_mode == "d") {
                     inputObj(input, error);
                 } else if (_mode == "f") {
-                    writeIn(input + "\n" + error, "error.txt", error.slice(0, 6) + "…，" + "详情请查看error.txt");
+                    writeIn(-1, input + "\n" + error, "error.txt", error.slice(0, 6) + "…，" + "详情请查看error.txt");
                 }
                 return false;
             };
@@ -400,7 +406,7 @@ function operateStrings() {
                 if (_mode == "d") {
                     inputOpt(input, error);
                 } else if (_mode == "f") {
-                    writeIn(input + "\n" + error, "error.txt", error.slice(0, 6) + "…，" + "详情请查看error.txt");
+                    writeIn(-1, input + "\n" + error, "error.txt", error.slice(0, 6) + "…，" + "详情请查看error.txt");
                 }
                 return false;
             };
@@ -625,16 +631,16 @@ function object_copy(result, other) {
     Object.assign(result.define_init, other.define_init);
 }
 
-function oGroup_write_file(path_char_t, group) //  写入文件 返回写入结果（false为失败）
+function oGroup_return_file(group) //  写入文件 返回写入结果（false为失败）
 {
     /*
     files.create(path_char_t);
     var file_data = files.read(path_char_t);
     if (file_data === null) return false;*/
-    file_data = group.parse_toXML();/*
-    files.write(path_char_t, file_data);*/
-    writeIn(file_data);
-    return true;
+    file_data = group.parse_toXML();
+    /*
+        files.write(path_char_t, file_data);*/
+    return file_data;
 }
 
 function pareINIhr(file_path, g) {
@@ -653,6 +659,7 @@ function pareINIhr(file_path, g) {
         } else g.pushPair_object(line.split(':'), g.object_group[section]); // 这是键值
     }
     g.setO_action(g.object_group[section]); //  我很讨厌这行代码
+    return g.parse_toXML();
 }
 
 //  冷知识 name可以作为触发器的id（properties节点），并且更可观。重点：RW源码实现为检查id是否为null，真则将name作为id（Java）

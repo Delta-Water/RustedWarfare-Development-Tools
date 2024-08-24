@@ -5,6 +5,17 @@ batchTriggerGenerationToolView = ( // XML
         <button id="button2" text="教程"/>
     </horizontal>
 );
+editViewXML = (
+    <vertical>
+        <input padding="0 8" id="input" text="{{editViewText}}" textColor="#000000"/>
+    </vertical>
+);
+pathViewXML = (
+    <vertical>
+        <input padding="0 8" id="input" text="{{pathViewText}}" textColor="#000000"/>
+        <checkbox id="isMap" checked="true" text="导入到地图"/>
+    </vertical>
+);
 
 var triObj = {}, // 用于传递宾语键值对和变量
     triArray = {}, // 用于传递生成的宾语
@@ -94,13 +105,13 @@ function inputOpt(reInput, errCode) {
             return;
         };
         oS.gO(paramExp, loop);
-        writeIn();
+        writeIn(1);
     }, errCode);
 }
 
 function writeIn(mode, content, name, toastText) {
     if (mode != -1) {
-        bD.sPMID("请输入待导入的地图路径", "", (input, bool) => {
+        bD.sPMID("请输入待导入的地图路径", SDDir, (input, bool) => {
             if (mode == 0) { // ini
                 var content = oGroup_return_file(group);
             } else if (mode == 1) { // txt
@@ -183,17 +194,8 @@ function buildDialogs() {
         global['pathViewText'] = text;
         global["pathView"] = ui.inflate(pathViewXML);
         var bool = true;
-        pathView.isMap.on("check", (b) => {
-            if (b) {
-                bool = true;
-                // pathView.title.setText("请输入待导出的地图路径");
-            } else {
-                bool = false;
-                // pathView.title.setText("请输入待导出的文件名称");
-            }
-        });
         errCode ? inputView.input.setError(errCode) : {};
-        dialogs.build({
+        let dialog = dialogs.build({
             customView: pathView,
             title: title,
             positive: "确定",
@@ -208,6 +210,24 @@ function buildDialogs() {
             log("a", bool);
             callback(input, bool);
         }).on("negative", () => {}).show();
+        pathView.isMap.on("check", (b) => {
+            if (b) {
+                bool = true;
+                dialog.setTitle("请输入待导入的地图路径");
+                pathView.input.setText(SDDir);
+                /*
+                ui.run(function() {// 弃用的一种设置标题的方式
+                    var titleView = dialog.getWindow().getDecorView().findViewById(android.R.id.title);
+                    if (titleView instanceof android.widget.TextView) {
+                        titleView.setText("请输入待导出的地图路径");
+                    }
+                });*/
+            } else {
+                bool = false;
+                dialog.setTitle("请输入待导出的文件名称");
+                pathView.input.setText("");
+            }
+        });
     }
     // showAboutDialog
     this.sAD = function() {

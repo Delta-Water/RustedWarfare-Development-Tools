@@ -3,7 +3,7 @@
 ## 特性
 
 - **AutoX.js 环境**：你能够通过AutoX.js使用JavaScript语法与Android和Java交互开发自己的自动化工具。
-- [Database仓库](https://github.com/Delta-Water/RustedWarfare-Development-Tools-Database)你可以创建自己的工具源或导入他人的工具源。
+- [Database仓库](https://github.com/Delta-Water/RustedWarfare-Development-Tools-Database)：你可以创建自己的工具源或导入他人的工具源。
 
 ## 安装和使用
 

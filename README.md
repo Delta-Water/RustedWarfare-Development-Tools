@@ -1,9 +1,11 @@
 # RustedWarfare-Development-Tools
 
-## 特性
+铁锈战争开发助手
+
+## 本助手的优点
 
 - **AutoX.js 环境**：你能够通过AutoX.js使用JavaScript语法与Android和Java交互以开发自己的自动化工具。
-- **termux API调用**：你能够使用包括但不限于Python，C++和Java等一系列语言开发工具的逻辑，工具将使用termux API调用termux来执行你的代码。
+- **termux API调用**：你能够使用包括但不限于Python，C++和Java等一系列语言开发工具的逻辑，助手将使用termux API调用termux来执行你的代码。
 - [Database仓库](https://github.com/Delta-Water/RustedWarfare-Development-Tools-Database)：你可以方便的创建并公开自己的工具源供他人使用或导入并使用他人公开的工具源。
 - 开放讨论组：你能够通过讨论组与他人社交。学习教程，向社区提出问题，或者成为发布教程和解决他人疑惑的大佬。
 

@@ -2,9 +2,8 @@
 
 ## 特性
 
-- **AutoX.js 集成**：你能够根据AutoX.js的相关语法，开发自己的自动化工具，或导入他人开发的工具。（请前往[Database仓库](https://github.com/Delta-Water/RustedWarfare-Development-Tools-Database)查看教程）
-- **提高效率**：简化了~~模组~~和地图的开发流程。
-- **开源协作**：我们欢迎并鼓励社区成员参与项目的开发和完善。
+- **AutoX.js 环境**：你能够通过AutoX.js使用JavaScript语法与Android和Java交互开发自己的自动化工具。
+- [Database仓库](https://github.com/Delta-Water/RustedWarfare-Development-Tools-Database)你可以创建自己的工具源或导入他人的工具源。
 
 ## 安装和使用
 

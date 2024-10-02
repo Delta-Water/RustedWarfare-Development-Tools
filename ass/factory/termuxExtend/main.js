@@ -81,7 +81,7 @@ if (!dataBase.get("hasCity", false)) {
         T.sendCommandAndConfirm(cityScript_, successStrings, () => {
             hnfo("已完成初始化");
             dataBase.put("hasCity", true);
-            app.launchPackage("aj.rw.assistant");
+            hnfo("请返回到助手执行下一步操作");
         })
     })
 } else {
@@ -99,7 +99,7 @@ function init() {
         ]
         T.sendCommandAndConfirm(storageScript_, successStrings, () => {
             hnfo("请求储存权限成功");
-            app.launchPackage("aj.rw.assistant");
+            hnfo("请返回到助手执行下一步操作");
             inin = true
         })
     })

@@ -49,13 +49,12 @@ let paraArray = { // 参数数组，用于存储用户选择的参数
 };
 let inin = false;
 
-let cityScript = `
-pkg install -y python
+let cityScript = `pkg install -y python
 pkg install -y python-numpy
 pkg install -y python-pillow
 `;
-let cityScript_ = `
-pip install asteval
+let cityScript_ = `pip install asteval
+pip install regex
 pip install rwmapeditor-exgcdwu --no-deps
 `;
 let storageScript = `
@@ -75,6 +74,7 @@ if (!dataBase.get("hasCity", false)) {
     T.sendCommandAndConfirm(cityScript, successStrings, () => {
         let successStrings = [
             ['Successfully installed asteval', 'Requirement already satisfied: asteval'],
+            ['Successfully installed regex', 'Requirement already satisfied: regex'],
             ['Successfully installed rwmapeditor-exgcdwu', 'Requirement already satisfied: rwmapeditor-exgcdwu']
         ];
         hnfo("下载rwmapeditor-exgcdwu库和依赖项");
@@ -162,10 +162,10 @@ function generateCommand() {
     let savePath = ui.input_2.text();
 
     // 将命令数组转换为字符串
-    let command_a = `triggerauto ${readPath} -o ${savePath}
-    `,
+    let command_a = `triggerauto ${readPath} -o ${savePath}`,
         command_b = command.join(" ") != "" ? " " + command.join(" ") : "",
-        finalCommand = command_a + command_b;
+        finalCommand = command_a + command_b + `
+`;
 
     // 调用termux类
     if (inin) {

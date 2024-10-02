@@ -205,22 +205,30 @@ function loadTools(pa, pa2) {
                             hnfo("无需更新");
                             hnfo("已完成初始化");
                             dataBase.put("initTermuxBool", true);
-                            app.launchPackage("aj.rw.assistant");
+                            hnfo("请返回到助手执行下一步操作");
                             return
                         }
                         hnfo("即将执行pkg包更新指令，更新过程可能耗时长，请耐心等待，在下载中可以切后台去其他应用放松一下");
                         let successStrings = [
-                            ["*** sources.list (Y/I/N/O/D/Z) [default=N] ?", "to remove and",]
+                            ["*** sources.list (Y/I/N/O/D/Z) [default=N] ?", "to remove and", ]
                         ];
                         T.sendCommandAndConfirm(termuxScript_1, successStrings, (id) => {
                             if (id[0] != 0) {
                                 hnfo("完成更新");
                                 hnfo("已完成初始化");
                                 dataBase.put("initTermuxBool", true);
-                                app.launchPackage("aj.rw.assistant");
+                                hnfo("请返回到助手执行下一步操作");
                                 return
                             }
-                            T.sendCommandAndConfirm(termuxScript_2, successStrings, () => {});
+                            let successStrings = [
+                                "*** sources.list (Y/I/N/O/D/Z) [default=N] ?Y"
+                            ];
+                            T.sendCommandAndConfirm(termuxScript_2, successStrings, () => {
+                                hnfo("完成更新");
+                                hnfo("已完成初始化");
+                                dataBase.put("initTermuxBool", true);
+                                hnfo("请返回到助手执行下一步操作");
+                            });
                         })
                     })
                     return

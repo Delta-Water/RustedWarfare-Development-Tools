@@ -1,6 +1,8 @@
 # RustedWarfare-Development-Tools
 
-铁锈战争开发助手[releases](https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases)
+铁锈战争开发助手
+
+[releases](https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases)
 
 ## 特性及优点
 

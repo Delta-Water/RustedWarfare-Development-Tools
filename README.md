@@ -2,6 +2,8 @@
 
 铁锈战争开发助手
 
+![可爱的](https://avatars.githubusercontent.com/u/132277713?s=48&v=4)
+
 [releases](https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases)
 
 ## 特性及优点

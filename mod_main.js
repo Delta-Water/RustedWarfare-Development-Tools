@@ -61,7 +61,7 @@ function hint(mod, string, delay) {
 
     F.twinkle(mod, delay);
 }
-hint(0, "欢迎使用本助手！");
+hint(1, "欢迎使用本助手！");
 ui.viewpager.currentItem = 1; //跳转到1号子页面
 ui.viewpager.overScrollMode = View.OVER_SCROLL_NEVER; //删除滑动到底的阴影
 ui.sideViewList.setDataSource(sideViewList);
@@ -267,7 +267,7 @@ ui.sideViewList.on("item_click", (item, index) => {
     } else if (index == 3) {
         dialogs.build({
                 title: "关于",
-                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + vn_ + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
+                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + vN_ + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
                 positive: "分享",
                 neutral: "检测更新",
                 negative: "GitHub"

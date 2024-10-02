@@ -188,17 +188,5 @@ try {
     console.error(err);
 }
 */
-let uri = SDDir + "Documents/Trigger/.Log/",
-    uri_ = uri + "/" + getCurrentTimeStamp() + ".txt";
-logsList = files.listDir(uri);
-for (let i = logsList.length; i > 4; i--) {
-    files.remove(uri + logsList[0]);
-    logsList.shift();
-}
-files.createWithDirs(uri_);
-console.setGlobalLogConfig({
-    "file": uri_
-});
-
 let coreScript = files.read("./mod_main.js");
 eval(coreScript);

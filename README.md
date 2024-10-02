@@ -39,3 +39,7 @@
 - 令人扫兴的是，我现在高三了，为了自己的前途，不得不暂时放弃这个项目的部分维护工作。
 - 我知道，这个项目目前仍然简陋，还有很多不便使用的地方，还有很大的进步空间。
 - 因此，我会在保证学业的情况下，尽量抽空继续完善这个项目。
+
+## 友情链接
+
+[rwmapeditor-exgcdwu](https://github.com/exgcdwu/Rusted-Warfare-map-editor-for-city-occupation-play-)

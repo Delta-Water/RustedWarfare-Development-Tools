@@ -64,7 +64,9 @@ function updateFiles(pa) {
                 }
                 return false;
             });
-            toast("热更新成功，请重启应用");
+            toast("热更新成功！");
+            app.openUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases");
+            toast("你可以在此处查看更新内容");
             exit();
         }
         pa ? toast("已经是最新版本了~") : {};

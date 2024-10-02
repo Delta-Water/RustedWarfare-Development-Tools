@@ -1,0 +1,5 @@
+{
+    "name": "rwmapeditor(termux)",
+    "detailedIntroduction": "为铁锈战争地图编辑服务，使用python自动化，偏向减轻城夺地图宾语工作量。",
+    "termux": true
+}

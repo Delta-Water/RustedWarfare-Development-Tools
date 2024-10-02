@@ -267,7 +267,7 @@ ui.sideViewList.on("item_click", (item, index) => {
     } else if (index == 3) {
         dialogs.build({
                 title: "关于",
-                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + verArray[0] + '.' + verArray[1] + '.' + verArray[2] + '.' + verArray[3] + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
+                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + vn_ + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
                 positive: "分享",
                 neutral: "检测更新",
                 negative: "GitHub"

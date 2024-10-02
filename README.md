@@ -2,8 +2,6 @@
 
 铁锈战争开发助手
 
-![图标](https://raw.githubusercontent.com/Delta-Water/RustedWarfare-Development-Tools/refs/heads/main/res/logo.png)
-
 [releases](https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases)
 
 ## 特性及优点

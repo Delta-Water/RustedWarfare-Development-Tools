@@ -105,7 +105,7 @@ function acceTest() {
         auto.waitFor();
         ui.post(() => {
             accBool = true;
-            if (currentPage == "set") ui.acc_text.setText("无障碍权限：授予");
+            if (currentPage == "set") ui.acc_text.setText("无障碍权限：" + (accBool ? '已授予' : '未授予（点击进行授予）'));
         });
     });
 }
@@ -170,19 +170,24 @@ ui.sideViewList.on("item_click", (item, index) => {
         ui.viewpager.currentItem = 1; //跳转到1号子页面
         ui.webView.loadUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/discussions");
     } else if (index == 2) {
+        accTestBool = dataBase.get("accTestBool", false);
         changeToViewXML(settingXML);
         ui.viewpager.currentItem = 1;
         currentPage = "set";
-        ui.acc_text.on("click", () => {
-            acceTest();
-        })
         ui.acc.on("check", (checked) => {
             if (checked) {
+                accTestBool = true;
                 dataBase.put("accTestBool", true)
             } else {
+                accTestBool = false;
                 dataBase.put("accTestBool", false)
             }
         })
+        ui.acc_text.on("click", () => {
+            hnfo("1");
+            acceTest();
+        })
+        ui.acc_text.setText("无障碍权限：" + (accBool ? '已授予' : '未授予（点击进行授予）'));
     } else if (index == 3) {
         dialogs.build({
                 title: "关于",
@@ -247,7 +252,7 @@ function loadTools(pa, pa2) {
             if (item.t) {
                 if (!T.launchTest()) return
                 if (accBool != true) {
-                    herror("请先行点击检测（授予）无障碍");
+                    herror("请先行前往设置检测（授予）无障碍");
                     return
                 }
                 initTermux();

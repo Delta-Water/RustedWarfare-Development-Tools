@@ -184,7 +184,6 @@ ui.sideViewList.on("item_click", (item, index) => {
             }
         })
         ui.acc_text.on("click", () => {
-            hnfo("1");
             acceTest();
         })
         ui.acc_text.setText("无障碍权限：" + (accBool ? '已授予' : '未授予（点击进行授予）'));

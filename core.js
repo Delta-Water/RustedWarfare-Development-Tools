@@ -132,7 +132,7 @@ settingXML = (
         <text text="- 权限 -" color="white" textSize="16" gravity="center" margin="10" />
         <vertical padding="10 8">
             <checkbox id="acc" text="启动时自检权限" checked="{{accTestBool}}"/>
-            <text text="启动时自动检测无障碍权限授予情况；若没有授予则自动到跳转到设置界面以便授予（若需要使用termux相关的功能则建议勾选）" />
+            <text text="进入工具页面时自动检测无障碍权限授予情况；若没有授予则自动到跳转到设置以便授予（若需要使用termux相关的功能则建议勾选）" />
             <text id="acc_text" text="无障碍权限：{{accBool?'已授予':'未授予（点击进行授予）'}}" color="white" margin="8" />
         </vertical>
     </vertical>

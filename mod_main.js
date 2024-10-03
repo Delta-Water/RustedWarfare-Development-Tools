@@ -1,11 +1,15 @@
+// termux初始化脚本
 let termuxScript = `pkg update -y
 `;
 let termuxScript_1 = `pkg upgrade -y
 `;
 let termuxScript_2 = `Y
-`; // UI初始化
+`;
+
+// UI初始化
 ui.layout(main); // 显示视图
-// 悬浮窗
+
+// 创建悬浮窗类
 F = new FloatingWindowControl(window, window.floatingView, functionWindow, window.move);
 
 function hnfo(string, time) {
@@ -61,12 +65,13 @@ function hint(mod, string, delay) {
 
     F.twinkle(mod, delay);
 }
-hint(1, "欢迎使用本助手！");
+// hint(1, "欢迎使用本助手！");
 ui.viewpager.currentItem = 1; //跳转到1号子页面
 ui.viewpager.overScrollMode = View.OVER_SCROLL_NEVER; //删除滑动到底的阴影
 ui.sideViewList.setDataSource(sideViewList);
 ui.viewpager.setPageTransformer(true, new MyPageTransform()); //设置viewpager切换动画
 function MyPageTransform() {
+    // 自定义滑动页面切换器
     var mDp30 = dp2px(30);
     var mRadius = 0;
     var pageWidth;
@@ -93,28 +98,33 @@ function MyPageTransform() {
         }
     });
 };
-loadTools(0);
+loadTools(0); // 初始化
 
 function acceTest() {
     threads.start(() => {
         auto.waitFor();
         ui.post(() => {
             accBool = true;
-            ui.acc_text.setText("无障碍权限：授予");
+            if (currentPage == "set") ui.acc_text.setText("无障碍权限：授予");
         });
     });
 }
-ui.acc_text.on("click", () => {
-    acceTest();
-})
+
 ui.emitter.on("back_pressed", (e) => {
-    if (currentPage == 11) { // 如果当前页面是讨论页面
+    // 返回执行函数
+    // 数字标识为基础页面;字符串标识为侧边栏中的其他页面
+    /*
+    -1:侧边栏
+    0:主页
+    1:工具页
+    */
+    if (currentPage == "web") { // 如果当前页面是讨论页面
         if (ui.webView.canGoBack()) { // 如果webView可以返回
             ui.webView.goBack(); // 执行返回操作
         } else {
             // 如果webView不能返回，则返回至上一个页面
-            ui.viewpager.currentItem = 0; //跳转到1号子页面
-            currentPage = -1; // 更新当前页面状态
+            ui.viewpager.currentItem = 0;
+            currentPage = -1;
         }
     } else {
         if (currentPage == 2) {
@@ -122,36 +132,88 @@ ui.emitter.on("back_pressed", (e) => {
         } else
         if (currentPage == 1) {
             loadTools(0);
-        } else
-        if (currentPage == 0) {
+        } else if (currentPage == 0) { // 判断是否退出
             backPressCount++;
             if (backPressCount == 1) {
                 toast("再按一次退出应用");
                 backPressTimer = setTimeout(() => {
                     // 如果在提示后用户没有再次点击返回键，则重置点击次数
                     backPressCount = 0;
-                }, 3000); // 设置3000毫秒的超时时间，即3秒
+                }, 3000);
             }
-
             // 如果点击次数为2，则退出应用
             if (backPressCount == 2) {
-                clearTimeout(backPressTimer); // 清除计时器
-                exit(); // 调用退出应用的函数
+                clearTimeout(backPressTimer);
+                exit();
             }
-        } else {
+        } else if (currentPage == -1) {
             ui.viewpager.currentItem = 1;
             loadTools(0);
+        } else {
+            ui.viewpager.currentItem = 0;
+            currentPage = -1;
+            toast("再按一次返回工具界面");
         }
     }
     e.consumed = true;
 });
 
+ui.sideViewList.on("item_click", (item, index) => {
+    // 侧边栏监听函数
+    if (index == 0) {
+        loadTools(0);
+        ui.viewpager.currentItem = 1; //跳转到1号子页面
+    } else if (index == 1) {
+        currentPage = "web";
+        changeToViewXML(webViewXML);
+        // webViewExtend(ui.webView);
+        ui.viewpager.currentItem = 1; //跳转到1号子页面
+        ui.webView.loadUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/discussions");
+    } else if (index == 2) {
+        changeToViewXML(settingXML);
+        ui.viewpager.currentItem = 1;
+        currentPage = "set";
+        ui.acc_text.on("click", () => {
+            acceTest();
+        })
+        ui.acc.on("check", (checked) => {
+            if (checked) {
+                dataBase.put("accTestBool", true)
+            } else {
+                dataBase.put("accTestBool", false)
+            }
+        })
+    } else if (index == 3) {
+        dialogs.build({
+                title: "关于",
+                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + vN_ + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
+                positive: "分享",
+                neutral: "检测更新",
+                negative: "GitHub"
+            })
+            .on("positive", () => {
+                setClip("https://github.com/Delta-Water/RustedWarfare-Development-Tools/releases");
+                toast("已复制下载链接");
+            })
+            .on("neutral", () => {
+                updateFiles(true);
+            })
+            .on("negative", () => {
+                app.openUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools");
+            })
+            .show();
+    }
+})
+
 function loadTools(pa, pa2) {
-    if (pa == 0) { // 加载本地工具和工具源
+    // 工具加载函数
+    /*
+    0:加载本地工具和工具源
+    */
+    if (pa == 0) {
         if (accTestBool) {
             acceTest();
         }
-
         let sourcesArray = [];
         let toolsArray = [];
         files.listDir(assPath).forEach((fileName) => {
@@ -179,12 +241,6 @@ function loadTools(pa, pa2) {
         })
         changeToViewXML(toolsViewXML);
         currentPage = 0;
-        /*
-        activity.setSupportActionBar(ui.toolbar);
-        ui.toolsViewPager.setTitles(["工具", "仓库"]);
-        ui.tabs.setupWithViewPager(ui.toolsViewPager);
-        ui.sources.setDataSource(sourcesArray);
-        */
         ui.tools.setDataSource(toolsArray);
 
         ui.tools.on("item_click", (item) => {
@@ -194,45 +250,7 @@ function loadTools(pa, pa2) {
                     herror("请先行点击检测（授予）无障碍");
                     return
                 }
-                if (!dataBase.get("initTermuxBool", false)) {
-                    hnfo("你尚未进行初始化");
-                    let successStrings = [
-                        ["Run 'apt list --upgradable' to see", "All packages are up to date."],
-                    ];
-                    hnfo("获取pkg更新信息", 4000);
-                    T.sendCommandAndConfirm(termuxScript, successStrings, (id) => {
-                        if (id[0] == 1) {
-                            hnfo("无需更新");
-                            hnfo("已完成初始化");
-                            dataBase.put("initTermuxBool", true);
-                            hnfo("请返回到助手执行下一步操作");
-                            return
-                        }
-                        hnfo("即将执行pkg包更新指令，更新过程可能耗时长，请耐心等待，在下载中可以切后台去其他应用放松一下");
-                        let successStrings = [
-                            ["*** sources.list (Y/I/N/O/D/Z) [default=N] ?", "to remove and", ]
-                        ];
-                        T.sendCommandAndConfirm(termuxScript_1, successStrings, (id) => {
-                            if (id[0] != 0) {
-                                hnfo("完成更新");
-                                hnfo("已完成初始化");
-                                dataBase.put("initTermuxBool", true);
-                                hnfo("请返回到助手执行下一步操作");
-                                return
-                            }
-                            let successStrings = [
-                                "*** sources.list (Y/I/N/O/D/Z) [default=N] ?Y"
-                            ];
-                            T.sendCommandAndConfirm(termuxScript_2, successStrings, () => {
-                                hnfo("完成更新");
-                                hnfo("已完成初始化");
-                                dataBase.put("initTermuxBool", true);
-                                hnfo("请返回到助手执行下一步操作");
-                            });
-                        })
-                    })
-                    return
-                }
+                initTermux();
             }
             toolScript = files.read(item.p + "main.js");
             eval(toolScript);
@@ -243,58 +261,64 @@ function loadTools(pa, pa2) {
     }
 }
 
-ui.acc.on("check", (checked) => {
-    if (checked) {
-        dataBase.put("accTestBool", true)
-    } else {
-        dataBase.put("accTestBool", false)
+function initTermux() {
+    // termux初始化函数
+    if (!dataBase.get("initTermuxBool", false)) {
+        hnfo("你尚未进行初始化");
+        let successStrings = [
+            ["Run 'apt list --upgradable' to see", "All packages are up to date."],
+        ];
+        hnfo("获取pkg更新信息", 4000);
+        T.sendCommandAndConfirm(termuxScript, successStrings, (id) => {
+            if (id[0] == 1) {
+                hnfo("无需更新");
+                hnfo("已完成初始化");
+                dataBase.put("initTermuxBool", true);
+                hnfo("请返回到助手执行下一步操作");
+                return
+            }
+            hnfo("即将执行pkg包更新指令，更新过程可能耗时长，请耐心等待，在下载中可以切后台去其他应用放松一下");
+            let successStrings = [
+                ["*** sources.list (Y/I/N/O/D/Z) [default=N] ?", "to remove and", ]
+            ];
+            T.sendCommandAndConfirm(termuxScript_1, successStrings, (id) => {
+                if (id[0] != 0) {
+                    hnfo("完成更新");
+                    hnfo("已完成初始化");
+                    dataBase.put("initTermuxBool", true);
+                    hnfo("请返回到助手执行下一步操作");
+                    return
+                }
+                let successStrings = [
+                    "*** sources.list (Y/I/N/O/D/Z) [default=N] ?Y"
+                ];
+                T.sendCommandAndConfirm(termuxScript_2, successStrings, () => {
+                    hnfo("完成更新");
+                    hnfo("已完成初始化");
+                    dataBase.put("initTermuxBool", true);
+                    hnfo("请返回到助手执行下一步操作");
+                });
+            })
+        })
+        return
     }
-})
+}
+
+// 暂时弃用的代码
 /*
-// 创建一个JavaScript函数，用于隐藏不需要的元素
-var hideUnwantedContent = `
-
-`;*/
-ui.sideViewList.on("item_click", (item, index) => {
-    if (index == 0) {
-        loadTools(0);
-        ui.viewpager.currentItem = 1; //跳转到1号子页面
-    } else if (index == 1) {
-        currentPage = 11;
-
-        changeToViewXML(webViewXML);
-        // webViewExtend(ui.webView);
-        ui.viewpager.currentItem = 1; //跳转到1号子页面
-        ui.webView.loadUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/discussions");
-        var webSettings = ui.webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // 启用JavaScript
-        webSettings.setAllowFileAccess(true); // 允许访问文件
-        webSettings.setAllowContentAccess(true); // 允许内容访问
-        webSettings.setDomStorageEnabled(true); // 启用DOM存储API
-        // ui.webView.loadUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/discussions");
-    } else if (index == 3) {
-        dialogs.build({
-                title: "关于",
-                content: '开发者：DeltaWater\n自动热更新已开启\n版本号：' + vN_ + "\n欢迎有一定代码基础者加入开发\n欢迎分享本工具，持续完善中",
-                positive: "分享",
-                neutral: "检测更新",
-                negative: "GitHub"
-            })
-            .on("positive", () => {
-                setClip("https://wwp.lanzoup.com/iF14E25ateub");
-                toast("已复制下载链接");
-            })
-            .on("neutral", () => {
-                updateFiles(true);
-            })
-            .on("negative", () => {
-                app.openUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools");
-            })
-            .show();
-    }
-})
-
-// 暂时弃用代码
+activity.setSupportActionBar(ui.toolbar);
+ui.toolsViewPager.setTitles(["工具", "仓库"]);
+ui.tabs.setupWithViewPager(ui.toolsViewPager);
+ui.sources.setDataSource(sourcesArray);
+*/
+/*
+var webSettings = ui.webView.getSettings();
+webSettings.setJavaScriptEnabled(true); // 启用JavaScript
+webSettings.setAllowFileAccess(true); // 允许访问文件
+webSettings.setAllowContentAccess(true); // 允许内容访问
+webSettings.setDomStorageEnabled(true); // 启用DOM存储API
+*/
+// ui.webView.loadUrl("https://github.com/Delta-Water/RustedWarfare-Development-Tools/discussions");
 /*
 function webViewExtend(webView) {
     webView.webViewClient = new JavaAdapter(android.webkit.WebViewClient, {
@@ -328,24 +352,6 @@ function webViewExtend(webView) {
         onPageStarted: function(view, url, favicon) {
             // 页面开始加载
         }, 
-
-// 为悬浮窗和ScrollView设置触摸事件监听器
-floatingView.setOnTouchListener(new android.view.View.OnTouchListener(onTouch));
-scrollView.setOnTouchListener(new android.view.View.OnTouchListener(onTouch));
-
-// 为ScrollView内的按钮设置点击事件监听器
-mainWindow.button1.on("click", function() {
-    // 这里是按钮1点击事件的处理逻辑
-    toast("按钮1被点击");
-});
-mainWindow.button2.on("click", function() {
-    // 这里是按钮2点击事件的处理逻辑
-    toast("按钮2被点击");
-});
-
-// 设置悬浮窗的位置
-mainWindow.setPosition(0, 0);
- 
         onReceivedHttpAuthRequest: function(view, handler, host, realm) {
             // 接收HTTP身份验证请求
         },
@@ -360,3 +366,9 @@ mainWindow.setPosition(0, 0);
         }
     });
 }*/
+/*
+// 创建一个JavaScript函数，用于隐藏不需要的元素
+var hideUnwantedContent = `
+
+`;
+*/

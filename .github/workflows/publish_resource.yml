@@ -1,4 +1,4 @@
-name: Publish Resource
+name: Publish Resource on Tag Update
 
 on:
   push:
@@ -6,40 +6,49 @@ on:
       - 'res/version.json'
 
 jobs:
-  publish:
+  check-and-publish:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '14'
+        node-version: '20'  # Specify Node.js 20
 
     - name: Read JSON file
       run: |
-        echo "vn=$(jq -r '.vn' 'res/version.json')" >> $GITHUB_ENV
-        echo "vn_=$(jq -r '.vn_' 'res/version.json')" >> $GITHUB_ENV
+        jq '.' res/version.json
+      id: readJson
+
+    - name: Extract version number
+      id: extractVersion
+      run: |
+        VERSION=$(jq -r '.vn' res/version.json)
+        echo "version=$VERSION" >> $GITHUB_ENV
 
     - name: Create and push tag
       uses: actions/github-script@v6
+      env:
+        VERSION: ${{env.VERSION}}
       with:
         script: |
-          const tagName = process.env.vn;
-          const tagMessage = process.env.vn_;
-          await github.rest.git.createTag({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+          const tagName = 'vn'
+          const tagMessage = `${process.env.VERSION}`
+          const repo = github.getRepo(github.context.repo.owner, github.context.repo.repo)
+          repo.createTag({
             tag: tagName,
             message: tagMessage,
             object: context.sha,
             type: 'commit',
-          });
-          await github.rest.git.createRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: `refs/tags/${tagName}`,
-            sha: context.sha,
-          });
-          core.info(`Tag ${tagName} created and pushed.`);
+          }).then(() => {
+            return repo.createRef({
+              ref: `refs/tags/${tagName}`,
+              sha: context.sha,
+            })
+          }).then(() => {
+            core.info(`Tag ${tagName} created and pushed.`)
+          }).catch(error => {
+            core.setFailed(error.message)
+          })

@@ -54,7 +54,7 @@ function updateFiles(pa) {
         let netVN_ = JSON.parse(files.read(_dir + "res/version.json")).vn_;
         if (vN_ < netVN_) {
             files.listDir(_dir, (name) => {
-                if (name == "License" || name == "README.md") return false;
+                if (name == "License" || name == "README.md" || name == ".github") return false;
                 let path = _dir + name;
                 if (files.isDir(path)) {
                     writeDirsFiles(path);

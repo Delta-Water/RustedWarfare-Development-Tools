@@ -15,7 +15,7 @@ jobs:
     - name: Set up Node.js 20
       uses: actions/setup-node@v3
       with:
-        node-version: '20' # 设置为Node.js 20
+        node-version: '20'
 
     - name: Get current version
       id: get_version
@@ -25,15 +25,17 @@ jobs:
       shell: bash
 
     - name: Install jq
-      run: |
-        sudo apt-get update && sudo apt-get install -y jq
+      run: sudo apt-get update && sudo apt-get install -y jq
 
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.get_version.outputs.vn }}
-        release_name: ${{ steps.get_version.outputs.vn_ }}
+        tag_name: ${{ steps.get_version.outputs.vn_ }}
+        target_commitish: 'main'
+        name: 'v${{ steps.get_version.outputs.vn_ }}'
+        body: 'release匹配的脚本环境号： ${{ steps.get_version.outputs.vn }}'
         draft: false
         prerelease: false
+        generate_release_notes: true

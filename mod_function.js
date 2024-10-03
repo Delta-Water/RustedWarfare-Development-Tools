@@ -61,7 +61,7 @@ function Termux() {
                     this.isListening = true;
                 }
                 text += terminalView.getContentDescription();
-                text = text.slice(-9999);
+                if (text.length > 999999) text = text.slice(-99999);
                 let allSuccessStringsFound = successStrings.every((successString) => {
                     if (typeof successString === "string") {
                         successID.push(0);
@@ -345,7 +345,7 @@ FloatingWindowControl.prototype.twinkle = function(mod, time) {
                 this.window.floatingFunctionView.setAlpha(1);
                 window.hint_info.setText(text.slice(1));
             })
-        }, 250)
+        }, 100)
     } else if (mod == 2 && !this.popInterval_2) {
         this.popInterval_2 = setInterval(() => {
             if (this.isMini) {
@@ -365,7 +365,7 @@ FloatingWindowControl.prototype.twinkle = function(mod, time) {
                 this.window.floatingFunctionView.setAlpha(1);
                 window.hint_error.setText(text.slice(1));
             })
-        }, 250)
+        }, 100)
     }
 }
 

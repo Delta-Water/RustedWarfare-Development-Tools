@@ -1,4 +1,4 @@
-name: Publish Resource on Tag Update
+name: Auto Release on Version Update
 
 on:
   push:
@@ -6,49 +6,34 @@ on:
       - 'res/version.json'
 
 jobs:
-  check-and-publish:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
+    - name: Set up Node.js 20
       uses: actions/setup-node@v3
       with:
-        node-version: '20'  # Specify Node.js 20
+        node-version: '20' # 设置为Node.js 20
 
-    - name: Read JSON file
+    - name: Get current version
+      id: get_version
       run: |
-        jq '.' res/version.json
-      id: readJson
+        echo "::set-output name=vn::$(jq -r '.vn' res/version.json)"
+        echo "::set-output name=vn_::$(jq -r '.vn_' res/version.json)"
+      shell: bash
 
-    - name: Extract version number
-      id: extractVersion
+    - name: Install jq
       run: |
-        VERSION=$(jq -r '.vn' res/version.json)
-        echo "version=$VERSION" >> $GITHUB_ENV
+        sudo apt-get update && sudo apt-get install -y jq
 
-    - name: Create and push tag
-      uses: actions/github-script@v6
+    - name: Create Release
+      uses: actions/create-release@v1
       env:
-        VERSION: ${{env.VERSION}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        script: |
-          const tagName = 'vn'
-          const tagMessage = `${process.env.VERSION}`
-          const repo = github.getRepo(github.context.repo.owner, github.context.repo.repo)
-          repo.createTag({
-            tag: tagName,
-            message: tagMessage,
-            object: context.sha,
-            type: 'commit',
-          }).then(() => {
-            return repo.createRef({
-              ref: `refs/tags/${tagName}`,
-              sha: context.sha,
-            })
-          }).then(() => {
-            core.info(`Tag ${tagName} created and pushed.`)
-          }).catch(error => {
-            core.setFailed(error.message)
-          })
+        tag_name: ${{ steps.get_version.outputs.vn }}
+        release_name: ${{ steps.get_version.outputs.vn_ }}
+        draft: false
+        prerelease: false

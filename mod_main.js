@@ -179,12 +179,12 @@ function loadTools(pa, pa2) {
         })
         changeToViewXML(toolsViewXML);
         currentPage = 0;
-
+        /*
         activity.setSupportActionBar(ui.toolbar);
         ui.toolsViewPager.setTitles(["工具", "仓库"]);
         ui.tabs.setupWithViewPager(ui.toolsViewPager);
-
         ui.sources.setDataSource(sourcesArray);
+        */
         ui.tools.setDataSource(toolsArray);
 
         ui.tools.on("item_click", (item) => {

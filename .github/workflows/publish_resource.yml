@@ -28,7 +28,8 @@ jobs:
         script: |
           const tagName = process.env.vn;
           const tagMessage = process.env.vn_;
-          await github.git.createTag({
+          const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+          await octokit.rest.git.createTag({
             owner: context.repo.owner,
             repo: context.repo.repo,
             tag: tagName,
@@ -36,7 +37,7 @@ jobs:
             object: context.sha,
             type: 'commit',
           });
-          await github.git.createRef({
+          await octokit.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
             ref: `refs/tags/${tagName}`,

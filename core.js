@@ -111,25 +111,32 @@ toolsViewXML = (
     <vertical h="*">
         <appbar h="auto" bg="{{themeColor.b}}">
             <toolbar id="toolbar" title="铁锈开发助手"/>
-            <horizontal>
-                <checkbox id="acc" text="自动检测（授予）权限" gravity="center"layout_weight="1" checked="{{accTestBool}}"/>
-                <text id="acc_text" text="点击检测（授予）无障碍" gravity="center"layout_weight="1" />
-            </horizontal>
         </appbar>
-            <vertical h="*">
-                <list id="tools" spanCount="2" h="*">
-                    <card w="*" margin="16 8" cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground">
-                        <linear gravity="vertical" bg="{{themeColor.a}}">
-                            <vertical padding="10 8" layout_weight="1">
-                                <text text="{{n}}" textSize="16" textColor="black" gravity="left"/>
-                                <text layout_weight="1" text="{{dI}}"/>
-                            </vertical>
-                        </linear>
-                    </card>
-                </list>
-            </vertical>
+        <vertical h="*" >
+            <list id="tools" h="*" paddingTop="8" >
+                <card w="*" margin="16 8" cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground">
+                    <linear gravity="vertical" bg="{{themeColor.a}}">
+                        <vertical padding="10 8" layout_weight="1">
+                            <text text="{{n}}" textSize="16" textColor="black" gravity="left"/>
+                            <text layout_weight="1" text="{{dI}}"/>
+                        </vertical>
+                    </linear>
+                </card>
+            </list>
+        </vertical>
     </vertical>
 );
+settingXML = (
+    <vertical>
+        <toolbar id="toolbar" title="设置"/>
+        <text text="- 权限 -" color="white" textSize="16" gravity="center" margin="10" />
+        <vertical padding="10 8">
+            <checkbox id="acc" text="启动时自检权限" checked="{{accTestBool}}"/>
+            <text text="启动时自动检测无障碍权限授予情况；若没有授予则自动到跳转到设置界面以便授予（若需要使用termux相关的功能则建议勾选）" />
+            <text id="acc_text" text="无障碍权限：{{accBool?'已授予':'未授予（点击进行授予）'}}" color="white" margin="8" />
+        </vertical>
+    </vertical>
+)
 webViewXML = (
     <webview id="webView" w="*" h="*" />
 );
@@ -147,7 +154,7 @@ functionWindow = (
     <card cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground" w="auto" >
         <vertical>
             <vertical bg="#ffffff00">
-                <text id="hint_info" text="" color="blue" />
+                <text id="hint_info" text="" color="blue"/>
                 <text id="hint_error" text="" color="red" />
             </vertical>
             <ScrollView id="scrollView" h="80" bg="#ffffff">

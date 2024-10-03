@@ -30,8 +30,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: 'v${{ steps.get_version.outputs.vn_ }}'
-        release_name: 'action发布的版本：${{ steps.get_version.outputs.vn_ }}'
-        body: 'release匹配的环境代号： ${{ steps.get_version.outputs.vn }}'
+        release_name: 'auto_pre_${{ steps.get_version.outputs.vn_ }}'
+        body: '环境代号${{ steps.get_version.outputs.vn }}'
         draft: false
         prerelease: true
         # generate_release_notes: true

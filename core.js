@@ -111,13 +111,11 @@ toolsViewXML = (
     <vertical h="*">
         <appbar h="auto" bg="{{themeColor.b}}">
             <toolbar id="toolbar" title="铁锈开发助手"/>
-            <tabs id="tabs"/>
             <horizontal>
                 <checkbox id="acc" text="自动检测（授予）权限" gravity="center"layout_weight="1" checked="{{accTestBool}}"/>
                 <text id="acc_text" text="点击检测（授予）无障碍" gravity="center"layout_weight="1" />
             </horizontal>
         </appbar>
-        <viewpager id="toolsViewPager" marginTop="8">
             <vertical h="*">
                 <list id="tools" spanCount="2" h="*">
                     <card w="*" margin="16 8" cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground">
@@ -130,22 +128,6 @@ toolsViewXML = (
                     </card>
                 </list>
             </vertical>
-            <vertical h="*">
-                <list id="sources" spanCount="2" h="*">
-                    <card w="*" margin="16 8" cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground">
-                        <linear gravity="vertical" bg="{{themeColor.a}}">
-                            <vertical padding="10 8" layout_weight="1">
-                                <text text="{{n}}" textSize="16" textColor="black" gravity="left"/>
-                                <horizontal w="*">
-                                    <text layout_weight="1" text="{{sI}}"/>
-                                    <text gravity="right" text="{{v}}"/>
-                                </horizontal>
-                            </vertical>
-                        </linear>
-                    </card>
-                </list>
-            </vertical>
-        </viewpager>
     </vertical>
 );
 webViewXML = (
@@ -174,6 +156,23 @@ functionWindow = (
         </vertical>
     </card>
 );
+/*
+            <vertical h="*">
+                <list id="sources" spanCount="2" h="*">
+                    <card w="*" margin="16 8" cardCornerRadius="10" cardElevation="1" foreground="?selectableItemBackground">
+                        <linear gravity="vertical" bg="{{themeColor.a}}">
+                            <vertical padding="10 8" layout_weight="1">
+                                <text text="{{n}}" textSize="16" textColor="black" gravity="left"/>
+                                <horizontal w="*">
+                                    <text layout_weight="1" text="{{sI}}"/>
+                                    <text gravity="right" text="{{v}}"/>
+                                </horizontal>
+                            </vertical>
+                        </linear>
+                    </card>
+                </list>
+            </vertical>
+*/
 /*
 try {
     let uri = SDDir + "Documents/Trigger/.Log/",

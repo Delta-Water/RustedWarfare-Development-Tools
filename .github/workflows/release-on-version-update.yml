@@ -1,4 +1,4 @@
-name: Auto Release on Version Update
+name: Auto Prerelease on Version Update
 
 on:
   push:

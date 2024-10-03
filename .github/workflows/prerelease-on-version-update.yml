@@ -31,7 +31,7 @@ jobs:
       with:
         tag_name: 'v${{ steps.get_version.outputs.vn_ }}'
         target_commitish: 'main'
-        name: ${{ steps.get_version.outputs.vn_ }}
+        release_name: ${{ steps.get_version.outputs.vn_ }}
         body: 'release匹配的环境代号： ${{ steps.get_version.outputs.vn }}'
         draft: false
         prerelease: true

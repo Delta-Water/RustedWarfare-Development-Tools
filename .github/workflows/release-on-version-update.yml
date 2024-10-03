@@ -24,18 +24,15 @@ jobs:
         echo "::set-output name=vn_::$(jq -r '.vn_' res/version.json)"
       shell: bash
 
-    - name: Install jq
-      run: sudo apt-get update && sudo apt-get install -y jq
-
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.get_version.outputs.vn_ }}
+        tag_name: 'v${{ steps.get_version.outputs.vn_ }}'
         target_commitish: 'main'
-        name: 'v${{ steps.get_version.outputs.vn_ }}'
-        body: 'release匹配的脚本环境号： ${{ steps.get_version.outputs.vn }}'
+        name: ${{ steps.get_version.outputs.vn_ }}
+        body: 'release匹配的环境代号： ${{ steps.get_version.outputs.vn }}'
         draft: false
         prerelease: false
-        generate_release_notes: true
+        # generate_release_notes: true

@@ -30,8 +30,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: 'v${{ steps.get_version.outputs.vn_ }}'
-        target_commitish: 'main'
-        release_name: ${{ steps.get_version.outputs.vn_ }}
+        release_name: 'action发布的版本：${{ steps.get_version.outputs.vn_ }}'
         body: 'release匹配的环境代号： ${{ steps.get_version.outputs.vn }}'
         draft: false
         prerelease: true

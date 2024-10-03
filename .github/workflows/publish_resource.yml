@@ -1,4 +1,3 @@
- 
 name: Publish Resource
 
 on:
@@ -44,4 +43,3 @@ jobs:
             sha: context.sha,
           });
           core.info(`Tag ${tagName} created and pushed.`);
- 

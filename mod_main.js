@@ -355,7 +355,7 @@ function webViewExtend(webView) {
         },
         onPageStarted: function(view, url, favicon) {
             // 页面开始加载
-        }, 
+        },
         onReceivedHttpAuthRequest: function(view, handler, host, realm) {
             // 接收HTTP身份验证请求
         },

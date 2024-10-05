@@ -16,7 +16,7 @@
 // const floaty = require('floaty');
 // const dialogs = require('dialogs');
 // const automator = require('automator');
-// const ui = require('ui'); 
+// const ui = require('ui');
 // Termux交互模块
 function Termux() {
     this.isListening = false;
